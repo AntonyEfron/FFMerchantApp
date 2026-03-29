@@ -92,10 +92,9 @@ export default function InventoryScreen() {
         </View>
       </View>
 
-      <Animated.FlatList
-        entering={FadeIn.duration(400)}
+      <FlatList
         data={filteredProducts}
-        keyExtractor={(item: Product) => item._id}
+        keyExtractor={(item: Product, index: number) => item._id || index.toString()}
         renderItem={({ item }: { item: Product }) => (
           <ProductCard
             product={item}

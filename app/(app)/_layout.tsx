@@ -7,6 +7,8 @@ import { useAuthStore } from '@/src/store/authStore';
 import { useNotificationStore } from '@/src/store/notificationStore';
 import { LoadingScreen } from '@/src/components/ui/LoadingScreen';
 import { useAuth } from '@/src/hooks/useAuth';
+import { connectSocket, disconnectSocket } from '@/src/services/socket';
+import { useEffect } from 'react';
 
 export default function AppLayout() {
   const { colors, typography, borderRadius } = useTheme();
@@ -14,6 +16,15 @@ export default function AppLayout() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const newOrderCount = useNotificationStore((s) => s.newOrderCount);
   const { merchant } = useAuth(); // For profile icon usage
+  const isOnline = useAuthStore((s) => s.isOnline);
+  
+  useEffect(() => {
+    if (isAuthenticated && isOnline && merchant?.id) {
+       connectSocket(merchant.id);
+    } else {
+       disconnectSocket();
+    }
+  }, [isAuthenticated, isOnline, merchant?.id]);
 
   if (isLoading) return <LoadingScreen />;
   if (!isAuthenticated) return <Redirect href="/(auth)/login" />;

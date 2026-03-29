@@ -3,6 +3,7 @@ import {
   View,
   Text,
   FlatList,
+  ScrollView,
   RefreshControl,
   TouchableOpacity,
   StyleSheet,
@@ -17,6 +18,7 @@ import { LoadingScreen } from '@/src/components/ui/LoadingScreen';
 import { useNotificationStore } from '@/src/store/notificationStore';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import type { Order } from '@/src/types';
+import { OnlineToggle } from '@/src/components/ui/OnlineToggle';
 
 const TABS = ['All', 'Placed', 'Accepted', 'Packed', 'Delivered', 'Cancelled'];
 
@@ -54,17 +56,17 @@ export default function OrdersScreen() {
             {orders.length} total order{orders.length !== 1 ? 's' : ''}
           </Text>
         </View>
+        <OnlineToggle />
       </View>
 
       {/* Tab Filter */}
       <View style={{ backgroundColor: colors.surface, paddingBottom: spacing.sm, borderBottomWidth: 1, borderBottomColor: colors.divider }}>
-        <FlatList
-          data={TABS}
+        <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item}
           contentContainerStyle={{ paddingHorizontal: spacing.lg }}
-          renderItem={({ item }) => {
+        >
+          {TABS.map((item) => {
             const isActive = activeTab === item;
             const count = item === 'All'
               ? orders.length
@@ -72,6 +74,7 @@ export default function OrdersScreen() {
             
             return (
               <TouchableOpacity
+                key={item}
                 onPress={() => setActiveTab(item)}
                 style={[
                   styles.tab,
@@ -93,8 +96,8 @@ export default function OrdersScreen() {
                 </Text>
               </TouchableOpacity>
             );
-          }}
-        />
+          })}
+        </ScrollView>
       </View>
 
       {/* Orders List */}
@@ -126,6 +129,9 @@ export default function OrdersScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingTop: 60,
     paddingBottom: 16,

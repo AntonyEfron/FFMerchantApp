@@ -115,7 +115,7 @@ export default function RevenueScreen() {
                 .slice(0, 20)
                 .map((tx: any, idx: number) => (
                   <View
-                    key={idx}
+                    key={tx._id || idx}
                     style={[
                       styles.txRow,
                       idx < Math.min(transactions.length, 20) - 1 && {

@@ -9,6 +9,7 @@ import { getMerchantAnalytics } from '@/src/api/analytics';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useAuth } from '@/src/hooks/useAuth';
+import { OnlineToggle } from '@/src/components/ui/OnlineToggle';
 
 export default function DashboardScreen() {
   const { colors, typography, spacing, borderRadius } = useTheme();
@@ -44,7 +45,11 @@ export default function DashboardScreen() {
             {merchant?.shopName || 'Dashboard'}
           </Text>
         </View>
-        <Ionicons name="notifications-outline" size={24} color={colors.text} />
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <OnlineToggle />
+          <View style={{ width: spacing.md }} />
+          <Ionicons name="notifications-outline" size={24} color={colors.text} />
+        </View>
       </View>
 
       <ScrollView
@@ -171,6 +176,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row', 
     alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingTop: 60, // Account for top inset usually 50-60 on modern iOS
     paddingBottom: 16,
